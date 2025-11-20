@@ -1,0 +1,77 @@
+[
+  {
+    "text": "Search for top AI tools on Google",
+    "intent": "search_google",
+    "entities": { "query": "top AI tools" }
+  },
+  {
+    "text": "Play lo-fi study playlist on YouTube",
+    "intent": "search_youtube",
+    "entities": { "query": "lo-fi study playlist" }
+  },
+  {
+    "text": "Open the downloads folder",
+    "intent": "open_file_explorer",
+    "entities": { "file_path": "Downloads" }
+  },
+  {
+    "text": "Find my college project PDF",
+    "intent": "search_file",
+    "entities": { "query": "college project PDF" }
+  },
+  {
+    "text": "Open project report.docx",
+    "intent": "open_file_specific",
+    "entities": { "file_name": "project report.docx" }
+  },
+  {
+    "text": "Remind me to submit the report at 5 PM",
+    "intent": "perform_daily_task",
+    "entities": { "task": "submit the report", "time": "5 PM" }
+  },
+  {
+    "text": "Add take medicine to my to-do list",
+    "intent": "perform_daily_task",
+    "entities": { "task": "take medicine" }
+  },
+  {
+    "text": "Explain how quantum computing works",
+    "intent": "assistant_chat",
+    "entities": { "topic": "quantum computing" }
+  },
+  {
+    "text": "Open Chrome browser",
+    "intent": "open_application",
+    "entities": { "app_name": "Chrome" }
+  },
+  {
+    "text": "What time is it now?",
+    "intent": "get_system_info",
+    "entities": { "info_type": "time" }
+  },
+  {
+    "text": "Translate thank you to French",
+    "intent": "translate_text",
+    "entities": { "text": "thank you", "language": "French" }
+  },
+  {
+    "text": "Show me today’s weather in Delhi",
+    "intent": "get_weather",
+    "entities": { "location": "Delhi" }
+  },
+  {
+    "text": "Tell me a funny joke",
+    "intent": "tell_joke",
+    "entities": {}
+  },
+  {
+    "text": "What’s the latest tech news?",
+    "intent": "get_news",
+    "entities": { "topic": "tech" }
+  },
+  {
+    "text": "Open music folder in file explorer",
+    "intent": "open_file_explorer",
+    "entities": { "file_path": "Music" }
+  }
+]

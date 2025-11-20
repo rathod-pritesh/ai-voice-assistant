@@ -1,0 +1,14 @@
+{
+    "users": [
+        {
+            "name": "Rathod Pritesh",
+            "email": "abc@gmail.com",
+            "password": "$2b$12$HMEc9c32U8NFmd4CV9BN5OBhrHYAqP2ZAh6ojTiL8Sr4xP6pn8.bu"
+        },
+        {
+            "name": "Shubham Jani",
+            "email": "xyz@gmail.com",
+            "password": "$2b$12$G6ltcvBVX1IV/6p2B93qbeB1z8j0EKN.MNDxWRaAFPKaSX2ZDF2ga"
+        }
+    ]
+}
