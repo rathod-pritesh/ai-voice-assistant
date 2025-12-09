@@ -1,41 +1,79 @@
 from sentence_transformers import SentenceTransformer, util
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import pandas as pd
+import webbrowser
+import numpy as np
 
-BERT_MODEL = "all-MiniLM-L6-v2"
-SIM_THERESHOLD = 0.60
+df = pd.read_csv("assistant_dataset.csv", encoding="ISO-8859-1")
 
-FAQ = [
-    {"q": "hi", "a": "Hello! How can I assist you today?"},
-    {"q": "what is nlp", "a": "NLP means Natural Language Processing, which helps computers understand human language."},
-    {"q": "goodbye", "a": "Goodbye! See you soon."},
-    {"q": "what is ai", "a": "AI stands for Artificial Intelligence, which allows machines to learn and make decisions like humans."},
-    {"q": "what is machine learning", "a": "Machine learning is a part of AI that allows systems to learn from data."},
-    {"q": "types of machine learning", "a": "The main types of machine learning are supervised, unsupervised, and reinforcement learning."},
-    {"q": "what is deep learning", "a": "Deep learning is a branch of machine learning that uses neural networks with many layers."},
-    {"q": "what is python", "a": "Python is a programming language widely used in AI, backend development, and automation."},
-]
+questions = df["Question"].tolist()
+intents = df["Intent"].tolist()
+answers = df["Answer"].tolist()
 
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
-print("Loading BERT Model...")
-model = SentenceTransformer(BERT_MODEL)
+print("Encoding dataset...")
+question_embeddings = model.encode(questions)
 
-faq_questions = [item["q"] for item in FAQ]
-faq_emb = model.encode(faq_questions, convert_to_tensor=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    question_embeddings, intents, test_size=0.2, random_state=42
+)
 
-def get_reply(query: str) -> str:
-  if not query.strip():
-    return "Please say something."
+clf = LogisticRegression(max_iter=2000)
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+model_accuracy = accuracy_score(y_test, y_pred) * 100
+
+print("Assistant Ready!")
+
+def google_search(query):
+  url = f"https://www.google.com/search?q={query.replace(' ', '+')}"
+  webbrowser.open(url)
+
+def youtube_search(query):
+  url = f"https://www.youtube.com/results?search_query={query.replace(' ', '+')}"
+  webbrowser.open(url)
+
+def get_reply(query):
+
+  emb = model.encode([query])
+  predicted_intent = clf.predict(emb)[0]
+  print("Predicted Intent:", predicted_intent)
+
+  sims = util.cos_sim(model.encode(query, convert_to_tensor=True), 
+                      model.encode(questions, convert_to_tensor=True))[0]
   
-  # Encode user query
-  emb = model.encode(query, convert_to_tensor=True)
-
-  sims = util.cos_sim(emb, faq_emb)[0]
-
+  best_score = float(sims.max())
   idx = int(sims.argmax().item())
-  score = float(sims[idx])
+  answer = answers[idx]
 
-  print(f"[Similarity: {score:.3f}] → Match: {FAQ[idx]['q']}")
+  print("Similarity Score:", best_score)
 
-  if score >= SIM_THERESHOLD:
-    return FAQ[idx]["a"]
+  q = query.lower()
+
+  if predicted_intent == "GoogleSearch" or "search" in q or "google" in q or "search for" in q:
+    google_search(query)
+    return f"{query} on Google."
   
-  return "I am not sure about that, but you can ask me about AI, Python, BERT or something related!"
+  if predicted_intent == "YouTubeSearch" or "youtube" in q or "playlist" in q:
+    youtube_search(query)
+    return f"{query} on YouTube."
+  
+  if ("what is" in q or
+      "who is" in q or
+      "define" in q or
+      "tell me about" in q):
+    
+    if best_score >= 0.60:
+      return answer
+    else:
+      return "I don't know this yet, but I'm still learning!"
+    
+  if best_score >= 0.60:
+    return answer
+
+def get_accuracy():
+    return round(model_accuracy, 2)
