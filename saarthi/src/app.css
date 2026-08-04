@@ -1,19 +1,40 @@
 @import "tailwindcss";
-@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+:root {
+  --color-bg: #F5F6F3;
+  --color-surface: #FFFFFF;
+  --color-sidebar: #202623;
+  --color-primary: #2F7A5F;
+  --color-primary-hover: #26664E;
+  --color-accent: #A5C882;
+  --color-text: #1C1E1D;
+  --color-text-secondary: #646B67;
+  --color-border: #D9DDD8;
+  --color-success: #3E8B5A;
+  --color-warning: #C98B2B;
+  --color-error: #C45A4D;
+}
+
+body {
+  background-color: #F5F6F3;
+  color: #1C1E1D;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+}
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #F5F6F3;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 8px;
+  background: #D9DDD8;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #646B67;
 }

@@ -1,14 +1,15 @@
 export function initHomeAnimation(canvas) {
+  if (!canvas) return () => {};
   const ctx = canvas.getContext("2d");
 
   let particles = [];
   let animationFrameId;
 
   const config = {
-    glowCount: 50,
-    starCount: 40,
-    nodeCount: 40,
-    linkDistance: 140,
+    glowCount: 45,
+    starCount: 35,
+    nodeCount: 35,
+    linkDistance: 130,
   };
 
   function resize() {
@@ -19,14 +20,16 @@ export function initHomeAnimation(canvas) {
   window.addEventListener("resize", resize);
 
   // --- Particle Classes ---
-  class GlowOrb {
+  class SageOrb {
     constructor() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
-      this.radius = Math.random() * 2 + 1.5;
-      this.dx = (Math.random() - 0.5) * 0.5;
-      this.dy = (Math.random() - 0.5) * 0.5;
-      this.opacity = Math.random() * 0.5 + 0.3;
+      this.radius = Math.random() * 2 + 1.2;
+      this.dx = (Math.random() - 0.5) * 0.4;
+      this.dy = (Math.random() - 0.5) * 0.4;
+      this.opacity = Math.random() * 0.35 + 0.15;
+      // Alternate between Primary (#2F7A5F) and Accent (#A5C882)
+      this.color = Math.random() > 0.5 ? "47, 122, 95" : "165, 200, 130";
     }
     update() {
       this.x += this.dx;
@@ -40,7 +43,7 @@ export function initHomeAnimation(canvas) {
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(6, 182, 212, ${this.opacity})`; // cyan
+      ctx.fillStyle = `rgba(${this.color}, ${this.opacity})`;
       ctx.fill();
     }
   }
@@ -49,9 +52,10 @@ export function initHomeAnimation(canvas) {
     constructor() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
-      this.radius = Math.random() * 1 + 0.7;
-      this.dx = (Math.random() - 0.5) * 1.2;
-      this.dy = (Math.random() - 0.5) * 1.2;
+      this.radius = Math.random() * 0.9 + 0.5;
+      this.dx = (Math.random() - 0.5) * 0.8;
+      this.dy = (Math.random() - 0.5) * 0.8;
+      this.opacity = Math.random() * 0.4 + 0.2;
     }
     update() {
       this.x += this.dx;
@@ -65,19 +69,18 @@ export function initHomeAnimation(canvas) {
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      ctx.fillStyle = `rgba(100, 107, 103, ${this.opacity})`;
       ctx.fill();
     }
   }
 
-  // 3️⃣ Node particles (connect with lines)
-  class Node {
+  class ForestNode {
     constructor() {
       this.x = Math.random() * canvas.width;
       this.y = Math.random() * canvas.height;
       this.radius = Math.random() * 2 + 1;
-      this.dx = (Math.random() - 0.5) * 0.4;
-      this.dy = (Math.random() - 0.5) * 0.4;
+      this.dx = (Math.random() - 0.5) * 0.35;
+      this.dy = (Math.random() - 0.5) * 0.35;
     }
     update() {
       this.x += this.dx;
@@ -89,34 +92,30 @@ export function initHomeAnimation(canvas) {
     draw() {
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(6, 182, 212, 0.6)";
+      ctx.fillStyle = "rgba(47, 122, 95, 0.45)"; // Primary #2F7A5F
       ctx.fill();
     }
   }
 
-  // --- Initialize All Particles ---
   function initParticles() {
     particles = [];
 
-    for (let i = 0; i < config.glowCount; i++) particles.push(new GlowOrb());
+    for (let i = 0; i < config.glowCount; i++) particles.push(new SageOrb());
     for (let i = 0; i < config.starCount; i++) particles.push(new Star());
-    for (let i = 0; i < config.nodeCount; i++) particles.push(new Node());
+    for (let i = 0; i < config.nodeCount; i++) particles.push(new ForestNode());
   }
 
   initParticles();
 
-  // --- Animation Loop ---
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Update + Draw
     particles.forEach((p) => {
       p.update();
       p.draw();
     });
 
-    // Draw lines between nodes only
-    const nodes = particles.filter((p) => p instanceof Node);
+    const nodes = particles.filter((p) => p instanceof ForestNode);
 
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
@@ -131,8 +130,8 @@ export function initHomeAnimation(canvas) {
           ctx.beginPath();
           ctx.moveTo(n1.x, n1.y);
           ctx.lineTo(n2.x, n2.y);
-          ctx.strokeStyle = `rgba(6, 182, 212, ${0.3 * (1 - dist / config.linkDistance)})`;
-          ctx.lineWidth = 0.5;
+          ctx.strokeStyle = `rgba(47, 122, 95, ${0.18 * (1 - dist / config.linkDistance)})`;
+          ctx.lineWidth = 0.6;
           ctx.stroke();
         }
       }

@@ -19,8 +19,8 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-free": "^7.1.0",
 		"@tailwindcss/vite": "^4.1.14",
-		"@tsparticles/svelte": "^3.1.1",
 		"lucide-svelte": "^0.553.0",
+		"svelte-sonner": "^1.1.1",
 		"tailwindcss": "^4.1.14",
 		"tsparticles": "^3.9.1"
 	}
